@@ -184,7 +184,13 @@ func (r Rat) Round(precisionFactor int64) Rat {
 
 // RatMarshal - Marshable Rat Struct
 type RatMarshal struct {
-	Numerator, Denominator int64
+	Numerator   int64 `json:"numerator"`
+	Denominator int64 `json:"denominator"`
+}
+
+func init() {
+	wire.RegisterConcrete(Rat{}, "rat", nil)
+	wire.RegisterConcrete(RatMarshal{}, "ratinner", nil)
 }
 
 // MarshalJSON - custom implementation of JSON Marshal
