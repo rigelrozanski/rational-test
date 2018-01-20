@@ -1,11 +1,12 @@
 package rational
 
 import (
-	"encoding/json"
 	"fmt"
 	"math/big"
 	"strconv"
 	"strings"
+
+	wire "github.com/tendermint/go-wire"
 )
 
 // Rat - extend big.Rat
@@ -123,7 +124,7 @@ func (r Rat) EvaluateBig() *big.Int {
 
 	d, rem := new(big.Int), new(big.Int)
 	d.QuoRem(num, denom, rem)
-	if rem.Cmp(zero) == 0 {   // is the remainder zero
+	if rem.Cmp(zero) == 0 { // is the remainder zero
 		return d
 	}
 
@@ -188,14 +189,13 @@ type RatMarshal struct {
 
 // MarshalJSON - custom implementation of JSON Marshal
 func (r Rat) MarshalJSON() ([]byte, error) {
-	return json.Marshal(RatMarshal{r.Num(), r.Denom()})
+	return wire.MarshalJSON(RatMarshal{r.Num(), r.Denom()})
 }
 
 // UnmarshalJSON - custom implementation of JSON Unmarshal
 func (r *Rat) UnmarshalJSON(data []byte) error {
 	ratMar := new(RatMarshal)
-	err := json.Unmarshal(data, ratMar)
-	if err != nil {
+	if err := wire.UnmarshalJSON(data, ratMar); err != nil {
 		return err
 	}
 	r.Rat = big.NewRat(ratMar.Numerator, ratMar.Denominator)
