@@ -1,0 +1,8 @@
+package: github.com/rigelrozanski/rationalTest
+import:
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert
+  - require
+- package: github.com/tendermint/go-wire
+  version: sdk2-marshalJSON-disambiguated
