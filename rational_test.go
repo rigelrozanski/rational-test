@@ -236,9 +236,9 @@ func TestSerializationGoWire(t *testing.T) {
 }
 
 type testEmbed struct {
-	Field1 string
-	Field2 int
-	Field3 Rat
+	Field1 string `json:"f1"`
+	Field2 int    `json:"f2"`
+	Field3 Rat    `json:"f3"`
 }
 
 func TestEmbeddedSerializationGoWire(t *testing.T) {
