@@ -234,3 +234,26 @@ func TestSerializationGoWire(t *testing.T) {
 
 	assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
 }
+
+type testEmbed struct {
+	Field1 string
+	Field2 int
+	Field3 Rat
+}
+
+func TestEmbeddedSerializationGoWire(t *testing.T) {
+	assert, require := asrt.New(t), rqr.New(t)
+
+	r := testEmbed{"foo", 10, New(1, 3)}
+
+	rMarshal, err := wire.MarshalJSON(r)
+	require.Nil(err)
+
+	var rUnmarshal testEmbed
+	err = wire.UnmarshalJSON(rMarshal, &rUnmarshal)
+	require.Nil(err)
+
+	assert.Equal(r.Field1, rUnmarshal.Field1)
+	assert.Equal(r.Field2, rUnmarshal.Field2)
+	assert.True(r.Field3.Equal(rUnmarshal.Field3), "original: %v, unmarshalled: %v", r, rUnmarshal)
+}
