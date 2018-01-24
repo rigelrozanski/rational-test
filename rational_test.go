@@ -7,7 +7,6 @@ import (
 
 	asrt "github.com/stretchr/testify/assert"
 	rqr "github.com/stretchr/testify/require"
-	wire "github.com/tendermint/go-wire"
 )
 
 func TestNew(t *testing.T) {
@@ -225,11 +224,11 @@ func TestSerializationGoWire(t *testing.T) {
 
 	r := New(1, 3)
 
-	rMarshal, err := wire.MarshalJSON(r)
+	rMarshal, err := cdc.MarshalJSON(r)
 	require.Nil(err)
 
 	var rUnmarshal Rat
-	err = wire.UnmarshalJSON(rMarshal, &rUnmarshal)
+	err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
 	require.Nil(err)
 
 	assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
@@ -246,11 +245,11 @@ func TestEmbeddedSerializationGoWire(t *testing.T) {
 
 	r := testEmbed{"foo", 10, New(1, 3)}
 
-	rMarshal, err := wire.MarshalJSON(r)
+	rMarshal, err := cdc.MarshalJSON(r)
 	require.Nil(err)
 
 	var rUnmarshal testEmbed
-	err = wire.UnmarshalJSON(rMarshal, &rUnmarshal)
+	err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
 	require.Nil(err)
 
 	assert.Equal(r.Field1, rUnmarshal.Field1)

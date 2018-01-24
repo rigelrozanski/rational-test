@@ -9,6 +9,13 @@ import (
 	wire "github.com/tendermint/go-wire"
 )
 
+var cdc *wire.Codec
+
+func init() {
+	cdc = wire.NewCodec()
+	//cdc.RegisterConcrete(Rat{}, "rat", nil)
+}
+
 // Rat - extend big.Rat
 type Rat struct {
 	*big.Rat `json:"rat"`
@@ -188,20 +195,15 @@ type RatMarshal struct {
 	Denominator int64 `json:"denominator"`
 }
 
-func init() {
-	wire.RegisterConcrete(Rat{}, "rat", nil)
-	wire.RegisterConcrete(RatMarshal{}, "ratinner", nil)
-}
-
 // MarshalJSON - custom implementation of JSON Marshal
 func (r Rat) MarshalJSON() ([]byte, error) {
-	return wire.MarshalJSON(RatMarshal{r.Num(), r.Denom()})
+	return cdc.MarshalJSON(RatMarshal{r.Num(), r.Denom()})
 }
 
 // UnmarshalJSON - custom implementation of JSON Unmarshal
 func (r *Rat) UnmarshalJSON(data []byte) error {
 	ratMar := new(RatMarshal)
-	if err := wire.UnmarshalJSON(data, ratMar); err != nil {
+	if err := cdc.UnmarshalJSON(data, ratMar); err != nil {
 		return err
 	}
 	r.Rat = big.NewRat(ratMar.Numerator, ratMar.Denominator)
