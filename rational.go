@@ -13,7 +13,8 @@ var cdc *wire.Codec
 
 func init() {
 	cdc = wire.NewCodec()
-	//cdc.RegisterConcrete(Rat{}, "rat", nil)
+	cdc.RegisterInterface((*Rational)(nil), nil)
+	cdc.RegisterConcrete(Rat{}, "rat", nil)
 }
 
 // Rat - extend big.Rat
@@ -21,25 +22,25 @@ type Rat struct {
 	*big.Rat `json:"rat"`
 }
 
-//TODO implement interface after go-wire refactor
-//// Rational - big Rat with additional functionality
-//type Rational interface {
-//GetRat() *big.Rat
-//Num() int64
-//Denom() int64
-//GT(Rational) bool
-//LT(Rational) bool
-//Equal(Rational) bool
-//IsZero() bool
-//Inv() Rational
-//Mul(Rational) Rational
-//Quo(Rational) Rational
-//Add(Rational) Rational
-//Sub(Rational) Rational
-//Evaluate() int64
-//}
-//var _ Rational = Rat{} // enforce at compile time
-//var _ = wire.RegisterInterface(struct{ Rational }{}, wire.ConcreteType{Rat{}, 0x01})
+// Rational - big Rat with additional functionality
+type Rational interface {
+	GetRat() *big.Rat
+	Num() int64
+	Denom() int64
+	GT(Rational) bool
+	LT(Rational) bool
+	Equal(Rational) bool
+	IsZero() bool
+	Inv() Rational
+	Mul(Rational) Rational
+	Quo(Rational) Rational
+	Add(Rational) Rational
+	Sub(Rational) Rational
+	Round(int64) Rational
+	Evaluate() int64
+}
+
+var _ Rational = Rat{} // enforce at compile time
 
 // nolint - common values
 var (
@@ -103,18 +104,18 @@ func NewFromDecimal(decimalStr string) (f Rat, err error) {
 }
 
 //nolint
-func (r Rat) GetRat() *big.Rat  { return r.Rat }                                     // GetRat - get big.Rat
-func (r Rat) Num() int64        { return r.Rat.Num().Int64() }                       // Num - return the numerator
-func (r Rat) Denom() int64      { return r.Rat.Denom().Int64() }                     // Denom  - return the denominator
-func (r Rat) IsZero() bool      { return r.Num() == 0 }                              // IsZero - Is the Rat equal to zero
-func (r Rat) Equal(r2 Rat) bool { return r.Rat.Cmp(r2.GetRat()) == 0 }               // Equal - rationals are equal
-func (r Rat) GT(r2 Rat) bool    { return r.Rat.Cmp(r2.GetRat()) == 1 }               // GT - greater than
-func (r Rat) LT(r2 Rat) bool    { return r.Rat.Cmp(r2.GetRat()) == -1 }              // LT - less than
-func (r Rat) Inv() Rat          { return Rat{new(big.Rat).Inv(r.Rat)} }              // Inv - inverse
-func (r Rat) Mul(r2 Rat) Rat    { return Rat{new(big.Rat).Mul(r.Rat, r2.GetRat())} } // Mul - multiplication
-func (r Rat) Quo(r2 Rat) Rat    { return Rat{new(big.Rat).Quo(r.Rat, r2.GetRat())} } // Quo - quotient
-func (r Rat) Add(r2 Rat) Rat    { return Rat{new(big.Rat).Add(r.Rat, r2.GetRat())} } // Add - addition
-func (r Rat) Sub(r2 Rat) Rat    { return Rat{new(big.Rat).Sub(r.Rat, r2.GetRat())} } // Sub - subtraction
+func (r Rat) GetRat() *big.Rat         { return r.Rat }                                     // GetRat - get big.Rat
+func (r Rat) Num() int64               { return r.Rat.Num().Int64() }                       // Num - return the numerator
+func (r Rat) Denom() int64             { return r.Rat.Denom().Int64() }                     // Denom  - return the denominator
+func (r Rat) IsZero() bool             { return r.Num() == 0 }                              // IsZero - Is the Rat equal to zero
+func (r Rat) Equal(r2 Rational) bool   { return r.Rat.Cmp(r2.GetRat()) == 0 }               // Equal - rationals are equal
+func (r Rat) GT(r2 Rational) bool      { return r.Rat.Cmp(r2.GetRat()) == 1 }               // GT - greater than
+func (r Rat) LT(r2 Rational) bool      { return r.Rat.Cmp(r2.GetRat()) == -1 }              // LT - less than
+func (r Rat) Inv() Rational            { return Rat{new(big.Rat).Inv(r.Rat)} }              // Inv - inverse
+func (r Rat) Mul(r2 Rational) Rational { return Rat{new(big.Rat).Mul(r.Rat, r2.GetRat())} } // Mul - multiplication
+func (r Rat) Quo(r2 Rational) Rational { return Rat{new(big.Rat).Quo(r.Rat, r2.GetRat())} } // Quo - quotient
+func (r Rat) Add(r2 Rational) Rational { return Rat{new(big.Rat).Add(r.Rat, r2.GetRat())} } // Add - addition
+func (r Rat) Sub(r2 Rational) Rational { return Rat{new(big.Rat).Sub(r.Rat, r2.GetRat())} } // Sub - subtraction
 
 var zero = big.NewInt(0)
 var one = big.NewInt(1)
@@ -159,11 +160,12 @@ func (r Rat) Evaluate() int64 {
 }
 
 // Round - round Rat with the provided precisionFactor
-func (r Rat) Round(precisionFactor int64) Rat {
+func (r Rat) Round(precisionFactor int64) Rational {
 	rTen := Rat{new(big.Rat).Mul(r.Rat, big.NewRat(precisionFactor, 1))}
 	return Rat{big.NewRat(rTen.Evaluate(), precisionFactor)}
 }
 
+//// Old Reference code
 //func (r Rat) Evaluate() int64 {
 //num := r.Num()
 //denom := r.Denom()
