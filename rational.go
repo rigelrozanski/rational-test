@@ -1,6 +1,7 @@
 package rational
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -203,17 +204,18 @@ func (r Rat) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON - custom implementation of JSON Unmarshal
-func (r *Rat) UnmarshalJSON(data []byte) error {
+func (r *Rat) UnmarshalJSON(data []byte) (err error) {
+	defer func() {
+		if recover() != nil {
+			err = errors.New("divide by zero error during Unmarshal")
+		}
+	}()
+
 	ratMar := new(RatMarshal)
 	if err := cdc.UnmarshalJSON(data, ratMar); err != nil {
 		return err
 	}
-
-	// make the denominator 1 if empty
-	if ratMar.Numerator+ratMar.Denominator == 0 {
-		ratMar.Denominator++
-	}
-
 	r.Rat = big.NewRat(ratMar.Numerator, ratMar.Denominator)
+
 	return nil
 }
