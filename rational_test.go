@@ -204,6 +204,21 @@ func TestRound(t *testing.T) {
 	}
 }
 
+func TestZeroSerializationJSON(t *testing.T) {
+	assert := asrt.New(t)
+
+	var r Rat
+	err := json.Unmarshal([]byte("{\"numerator\":0,\"denominator\":1}"), &r)
+	assert.Nil(err)
+	err = json.Unmarshal([]byte("{\"numerator\":0,\"denominator\":0}"), &r)
+	assert.Nil(err)
+	err = json.Unmarshal([]byte("{}"), &r)
+	assert.Nil(err)
+
+	//should still panic if serializing something which is not
+	assert.Panics(func() { json.Unmarshal([]byte("{\"numerator\":1,\"denominator\":0}"), &r) })
+}
+
 func TestSerializationJSON(t *testing.T) {
 	assert, require := asrt.New(t), rqr.New(t)
 

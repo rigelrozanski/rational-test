@@ -208,6 +208,12 @@ func (r *Rat) UnmarshalJSON(data []byte) error {
 	if err := cdc.UnmarshalJSON(data, ratMar); err != nil {
 		return err
 	}
+
+	// make the denominator 1 if empty
+	if ratMar.Numerator+ratMar.Denominator == 0 {
+		ratMar.Denominator++
+	}
+
 	r.Rat = big.NewRat(ratMar.Numerator, ratMar.Denominator)
 	return nil
 }
