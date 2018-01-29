@@ -218,79 +218,79 @@ func TestZeroSerializationJSON(t *testing.T) {
 	assert.NotNil(err)
 }
 
-//func TestSerializationJSON(t *testing.T) {
-//assert, require := asrt.New(t), rqr.New(t)
+func TestSerializationJSON(t *testing.T) {
+	assert, require := asrt.New(t), rqr.New(t)
 
-//r := New(1, 3)
+	r := New(1, 3)
 
-//rMarshal, err := json.Marshal(r)
-//require.Nil(err)
+	rMarshal, err := json.Marshal(r)
+	require.Nil(err)
 
-//var rUnmarshal Rat
-//err = json.Unmarshal(rMarshal, &rUnmarshal)
-//require.Nil(err)
+	var rUnmarshal Rat
+	err = json.Unmarshal(rMarshal, &rUnmarshal)
+	require.Nil(err)
 
-//assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
-//}
+	assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
+}
 
-//func TestSerializationGoWire(t *testing.T) {
-//assert, require := asrt.New(t), rqr.New(t)
+func TestSerializationGoWire(t *testing.T) {
+	assert, require := asrt.New(t), rqr.New(t)
 
-//r := New(1, 3)
+	r := New(1, 3)
 
-//rMarshal, err := cdc.MarshalJSON(r)
-//require.Nil(err)
+	rMarshal, err := cdc.MarshalJSON(r)
+	require.Nil(err)
 
-//var rUnmarshal Rat
-//err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
-//require.Nil(err)
+	var rUnmarshal Rat
+	err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
+	require.Nil(err)
 
-//assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
-//}
+	assert.True(r.Equal(rUnmarshal), "original: %v, unmarshalled: %v", r, rUnmarshal)
+}
 
-//type testEmbedStruct struct {
-//Field1 string `json:"f1"`
-//Field2 int    `json:"f2"`
-//Field3 Rat    `json:"f3"`
-//}
+type testEmbedStruct struct {
+	Field1 string `json:"f1"`
+	Field2 int    `json:"f2"`
+	Field3 Rat    `json:"f3"`
+}
 
-//func TestEmbeddedStructSerializationGoWire(t *testing.T) {
-//assert, require := asrt.New(t), rqr.New(t)
+func TestEmbeddedStructSerializationGoWire(t *testing.T) {
+	assert, require := asrt.New(t), rqr.New(t)
 
-//r := testEmbedStruct{"foo", 10, New(1, 3)}
+	r := testEmbedStruct{"foo", 10, New(1, 3)}
 
-//rMarshal, err := cdc.MarshalJSON(r)
-//require.Nil(err)
+	rMarshal, err := cdc.MarshalJSON(r)
+	require.Nil(err)
 
-//var rUnmarshal testEmbedStruct
-//err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
-//require.Nil(err)
+	var rUnmarshal testEmbedStruct
+	err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
+	require.Nil(err)
 
-//assert.Equal(r.Field1, rUnmarshal.Field1)
-//assert.Equal(r.Field2, rUnmarshal.Field2)
-//assert.True(r.Field3.Equal(rUnmarshal.Field3), "original: %v, unmarshalled: %v", r, rUnmarshal)
+	assert.Equal(r.Field1, rUnmarshal.Field1)
+	assert.Equal(r.Field2, rUnmarshal.Field2)
+	assert.True(r.Field3.Equal(rUnmarshal.Field3), "original: %v, unmarshalled: %v", r, rUnmarshal)
 
-//}
+}
 
-//type testEmbedInterface struct {
-//Field1 string   `json:"f1"`
-//Field2 int      `json:"f2"`
-//Field3 Rational `json:"f3"`
-//}
+type testEmbedInterface struct {
+	Field1 string   `json:"f1"`
+	Field2 int      `json:"f2"`
+	Field3 Rational `json:"f3"`
+}
 
-//func TestEmbeddedInterfaceSerializationGoWire(t *testing.T) {
-//assert, require := asrt.New(t), rqr.New(t)
+func TestEmbeddedInterfaceSerializationGoWire(t *testing.T) {
+	assert, require := asrt.New(t), rqr.New(t)
 
-//r := testEmbedInterface{"foo", 10, New(1, 3)}
+	r := testEmbedInterface{"foo", 10, New(1, 3)}
 
-//rMarshal, err := cdc.MarshalJSON(r)
-//require.Nil(err)
+	rMarshal, err := cdc.MarshalJSON(r)
+	require.Nil(err)
 
-//var rUnmarshal testEmbedInterface
-//err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
-//require.Nil(err)
+	var rUnmarshal testEmbedInterface
+	err = cdc.UnmarshalJSON(rMarshal, &rUnmarshal)
+	require.Nil(err)
 
-//assert.Equal(r.Field1, rUnmarshal.Field1)
-//assert.Equal(r.Field2, rUnmarshal.Field2)
-//assert.True(r.Field3.Equal(rUnmarshal.Field3), "original: %v, unmarshalled: %v", r, rUnmarshal)
-//}
+	assert.Equal(r.Field1, rUnmarshal.Field1)
+	assert.Equal(r.Field2, rUnmarshal.Field2)
+	assert.True(r.Field3.Equal(rUnmarshal.Field3), "original: %v, unmarshalled: %v", r, rUnmarshal)
+}

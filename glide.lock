@@ -1,5 +1,5 @@
 hash: 64e08f05a571df7c6392b9ea40176310e9e416ecff08c5fd9864be28bd075731
-updated: 2018-01-24T01:02:00.922055144Z
+updated: 2018-01-29T16:59:31.704761656Z
 imports:
 - name: github.com/davecgh/go-spew
   version: 04cdfd42973bb9c8589fd6a731800cf222fde1a9
@@ -11,7 +11,7 @@ imports:
   - assert
   - require
 - name: github.com/tendermint/go-wire
-  version: ba9b20ea7b5e5ee1969c4b03d960cc1e598147ab
+  version: 7069a6e09d6a5e94accc0cebd077052d2faf1ff8
 testImports:
 - name: github.com/pmezard/go-difflib
   version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
